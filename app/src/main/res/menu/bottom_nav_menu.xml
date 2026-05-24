@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_expenses"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/nav_expenses" />
+    <item
+        android:id="@+id/nav_chart"
+        android:icon="@android:drawable/ic_menu_report_image"
+        android:title="@string/nav_chart" />
+</menu>

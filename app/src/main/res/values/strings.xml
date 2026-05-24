@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">ExpenseLite</string>
+
+    <!-- AddExpenseActivity -->
+    <string name="title_add_expense">Add Expense</string>
+    <string name="hint_name">Expense name</string>
+    <string name="hint_amount">Amount</string>
+    <string name="hint_category">Category</string>
+    <string name="btn_save">Save</string>
+    <string name="error_name">Enter a name</string>
+    <string name="error_amount_empty">Enter an amount</string>
+    <string name="error_amount_invalid">Enter a valid positive amount</string>
+    <string name="error_category">Select a category</string>
+
+    <!-- ExpenseListFragment -->
+    <string name="total_default">Total: 0.00 €</string>
+    <string name="total_format">Total: %.2f €</string>
+    <string name="filter_day">Day</string>
+    <string name="filter_week">Week</string>
+    <string name="filter_month">Month</string>
+    <string name="empty_expenses">No expenses for this period</string>
+    <string name="fab_add_desc">Add expense</string>
+
+    <!-- Delete dialog -->
+    <string name="delete_title">Delete Expense</string>
+    <string name="delete_message">Delete this expense?</string>
+    <string name="btn_confirm">Delete</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <!-- ChartFragment -->
+    <string name="no_chart_data">No data for this period</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_expenses">Expenses</string>
+    <string name="nav_chart">Chart</string>
+</resources>
