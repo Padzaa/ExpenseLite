@@ -1,17 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    fragment_expense_list.xml – izgled fragmenta koji prikazuje listu troškova.
+    Organizacija (odozgo prema dole):
+      1. Ukupan iznos (text_total)
+      2. Dugmići za filter: Dan / Sedmica / Mesec
+      3. Poruka "Nema troškova" (text_empty) – vidljiva samo kad je lista prazna
+      4. RecyclerView – skrolujuća lista troškova
+      5. Plutajuće dugme "+" (FAB) – pozicionirano u donjem desnom uglu PREКО liste
+
+    Spoljni FrameLayout omogućava da FAB bude pozicioniran preко liste
+    (to nije moguće sa LinearLayout-om koji ređa elemente jedan ispod drugog).
+-->
+
+<!--
+    FrameLayout – kontejner koji dozvoljava elementima da se nalaze JEDAN NAD DRUGIM.
+    Koristi se da bi plutajuće dugme (FAB) moglo biti "plutajuće" u uglu.
+-->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <!--
+        xmlns:android            – standardni namespace za android: atribute
+        xmlns:app                – namespace za atribute biblioteka (npr. app:srcCompat)
+        layout_width/height="match_parent" – FrameLayout popunjava ceo ekran
+    -->
 
+    <!--
+        LinearLayout – vertikalni kontejner za sve "normalne" elemente liste.
+        paddingBottom="88dp" sprečava da FAB dugme prekrije poslednji trošak.
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
         android:paddingBottom="88dp">
+        <!--
+            orientation="vertical" – elementi se ređaju odozgo prema dole
+            padding="16dp"         – unutrašnji razmak 16dp od svih ivica
+            paddingBottom="88dp"   – veći razmak na dnu da FAB dugme ne prekrije poslednji red liste
+        -->
 
+        <!--
+            TextView za ukupan iznos – prikazuje tekst poput "Ukupno: 42.50 €".
+            Java kod menja ovaj tekst svaki put kad se lista osvežava.
+        -->
         <TextView
             android:id="@+id/text_total"
             android:layout_width="match_parent"
@@ -20,7 +55,19 @@
             android:textStyle="bold"
             android:paddingBottom="12dp"
             android:text="@string/total_default" />
+        <!--
+            id="text_total"              – Java kod: textTotal.setText(getString(R.string.total_format, total))
+            textSize="20sp"              – veličina fonta 20sp (skalira se sa sistemskim podešavanjima)
+            textStyle="bold"             – podebljano za vizuelno isticanje iznosa
+            paddingBottom="12dp"         – razmak ispod teksta pre dugmića filtera
+            text="@string/total_default" – početni tekst: "Ukupno: 0.00 €"
+        -->
 
+        <!--
+            MaterialButtonToggleGroup – grupa dugmića koja radi kao radio buttons.
+            Uvek tačno jedno dugme mora biti izabrano (singleSelection + selectionRequired).
+            Korisnik bira vremenski period: Dan, Sedmica ili Mesec.
+        -->
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggle_filter"
             android:layout_width="wrap_content"
@@ -28,30 +75,58 @@
             android:layout_marginBottom="12dp"
             app:singleSelection="true"
             app:selectionRequired="true">
+            <!--
+                id="toggle_filter"           – Java kod: toggle.check(R.id.btn_day) i addOnButtonCheckedListener
+                layout_width="wrap_content"  – grupa je široka koliko tri dugmića zajedno
+                layout_marginBottom="12dp"   – razmak 12dp ispod grupe pre liste/poruke
+                app:singleSelection="true"   – samo jedno dugme može biti izabrano istovremeno
+                app:selectionRequired="true" – korisnik ne može izostaviti sva dugmića (uvek jedno izabrano)
+            -->
 
+            <!-- Dugme "Dan" – filter za prikaz troškova od ponoći tekućeg dana -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_day"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/filter_day" />
+            <!--
+                id="btn_day"               – Java: if (buttonId == R.id.btn_day) → getStartOfDay()
+                style="OutlinedButton"     – Material 3 dugme sa okvirom (nije popunjeno bojom)
+                text="@string/filter_day"  – tekst na dugmetu: "Dan"
+            -->
 
+            <!-- Dugme "Sedmica" – filter za prikaz troškova od ponedeljka tekuće sedmice -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_week"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/filter_week" />
+            <!--
+                id="btn_week"               – Java: else if (buttonId == R.id.btn_week) → getStartOfWeek()
+                text="@string/filter_week"  – tekst na dugmetu: "Sedmica"
+            -->
 
+            <!-- Dugme "Mesec" – filter za prikaz troškova od prvog dana tekućeg meseca -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_month"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/filter_month" />
+            <!--
+                id="btn_month"               – Java: else → getStartOfMonth()
+                text="@string/filter_month"  – tekst na dugmetu: "Mesec"
+            -->
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
+        <!--
+            Poruka "Nema troškova" – prikazuje se SAMO kada nema troškova za izabrani period.
+            visibility="gone" = nevidljiv I ne zauzima prostor (za razliku od "invisible" koji zauzima).
+            Java kod dinamički prebacuje između VISIBLE i GONE.
+        -->
         <TextView
             android:id="@+id/text_empty"
             android:layout_width="match_parent"
@@ -60,15 +135,37 @@
             android:visibility="gone"
             android:gravity="center"
             android:paddingTop="40dp" />
+        <!--
+            id="text_empty"               – Java: textEmpty.setVisibility(empty ? View.VISIBLE : View.GONE)
+            text="@string/empty_expenses" – poruka: "Nema troškova za ovaj period"
+            visibility="gone"             – inicijalno sakriven (prikazuje se Java kodom)
+            gravity="center"              – tekst je horizontalno centriran na ekranu
+            paddingTop="40dp"             – razmak 40dp odozgo da tekst izgleda vizuelno centrirano
+        -->
 
+        <!--
+            RecyclerView – efikasna skrolujuća lista za prikaz troškova.
+            layout_height="0dp" + layout_weight="1" = zauzima sav preostali prostor ispod dugmića.
+            Java kod popunjava listu kroz ExpenseAdapter.
+        -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_expenses"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+        <!--
+            id="recycler_expenses"  – Java: recyclerView.setLayoutManager(...) i recyclerView.setAdapter(adapter)
+            layout_height="0dp"     – visina se ne fiksira; određuje je weight mehanizam
+            layout_weight="1"       – zauzima sav preostali vertikalni prostor u LinearLayout-u
+        -->
 
     </LinearLayout>
 
+    <!--
+        FloatingActionButton (FAB) – okruglo plutajuće dugme "+" za dodavanje novog troška.
+        Pozicionirano u donjem desnom uglu zahvaljujući FrameLayout-u i layout_gravity atributu.
+        Tapnuće pokreće AddExpenseActivity.
+    -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
@@ -77,5 +174,13 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/fab_add_desc"
         app:srcCompat="@android:drawable/ic_input_add" />
+    <!--
+        id="fab_add"                        – Java: fab.setOnClickListener(v -> addExpenseLauncher.launch(intent))
+        layout_width/height="wrap_content"  – veličina dugmeta je određena ikonom unutar njega
+        layout_gravity="bottom|end"         – pozicionira FAB u dole-desni ugao unutar FrameLayout-a
+        layout_margin="16dp"                – razmak 16dp od ivica ekrana (ne naslanja se na ivicu)
+        contentDescription                  – opis za čitače ekrana (pristupačnost za korisnike sa oštećenim vidom)
+        app:srcCompat="ic_input_add"        – ugrađena Android ikonica "+" za dodavanje
+    -->
 
 </FrameLayout>

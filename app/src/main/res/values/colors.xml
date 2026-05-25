@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    colors.xml – fajl za definisanje boja koje se koriste u aplikaciji.
+    Boje se definišu kao heksadecimalni kodovi u formatu #AARRGGBB ili #RRGGBB:
+      AA = alpha (providnost): FF = potpuno neprozirno, 00 = potpuno prozirno
+      RR = crvena komponenta (red)
+      GG = zelena komponenta (green)
+      BB = plava komponenta (blue)
+    Grafičke boje (zelena, plava, narandžasta, ljubičasta) za grafikon
+    definisane su direktno u ChartFragment.java kao Color.rgb() vrednosti.
+-->
 <resources>
+    <!-- Potpuno crna boja (#FF000000): FF=neprozirno, 00=nema crvene, 00=nema zelene, 00=nema plave) -->
     <color name="black">#FF000000</color>
+
+    <!-- Potpuno bela boja (#FFFFFFFF): FF=neprozirno, FF=maksimalna crvena+zelena+plava = belo) -->
     <color name="white">#FFFFFFFF</color>
 </resources>

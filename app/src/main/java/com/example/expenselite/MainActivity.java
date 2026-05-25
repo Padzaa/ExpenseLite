@@ -1,97 +1,93 @@
-package com.example.expenselite;
+package com.example.expenselite; // Paket u kome se nalazi ova klasa
 
-import android.os.Bundle;
+import android.os.Bundle; // Sadrži sačuvano stanje aktivnosti (koristi se pri rotaciji ekrana)
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity; // Osnovna klasa za aktivnost sa podrškom za AppCompat i toolbar
+import androidx.fragment.app.Fragment;           // Osnovna klasa za fragment – "podekran" unutar aktivnosti
 
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.appbar.MaterialToolbar;           // Traka sa naslovom aplikacije (Material Design)
+import com.google.android.material.bottomnavigation.BottomNavigationView; // Traka za navigaciju na dnu ekrana sa ikonama
 
+// Glavna aktivnost – prvi ekran koji se prikazuje pri pokretanju aplikacije.
+// Sadrži toolbar na vrhu, fragmenti ekran u sredini i navigacionu traku na dnu.
+// Upravlja prebacivanjem između dva fragmenta: ExpenseListFragment i ChartFragment.
 public class MainActivity extends AppCompatActivity {
 
-    private ExpenseListFragment expenseListFragment;
-    private ChartFragment chartFragment;
+    private ExpenseListFragment expenseListFragment; // Fragment koji prikazuje listu troškova
+    private ChartFragment chartFragment;             // Fragment koji prikazuje kružni grafikon
 
-    // Inflates the root layout and registers the toolbar as the action bar.
-    // Then branches on savedInstanceState: null means the activity is being created for
-    // the first time so fragments are built fresh; non-null means the system is recreating
-    // the activity after a configuration change (e.g. rotation) and the fragments already
-    // exist in the fragment manager, so we just retrieve references to them by tag.
-    // Finally sets up the bottom navigation bar.
+    // Poziva se kada Android kreira ovu aktivnost i prikazuje je na ekranu.
+    // Učitava XML izgled, podešava toolbar, kreira ili obnavlja fragmente,
+    // i podešava navigacionu traku na dnu ekrana.
+    // savedInstanceState je null pri prvom pokretanju, a sadrži podatke pri rotaciji ekrana.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);   // Obavezno – poziva onCreate roditeljske klase
+        setContentView(R.layout.activity_main); // Učitava XML izgled ovog ekrana
 
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar); // Pronalazi toolbar po ID-u
+        setSupportActionBar(toolbar); // Registruje toolbar kao zvanični action bar aktivnosti
 
-        // On first launch savedInstanceState is null, so we create the fragments fresh.
-        // After a configuration change (rotation) the system already restored them, so we
-        // just re-acquire the references by tag to avoid creating duplicates.
+        // Ako je savedInstanceState null, aktivnost se kreira prvi put – pravimo fragmente od nule.
+        // Ako nije null, Android je već obnovio fragmente (npr. posle rotacije) – samo pronalazimo reference.
         if (savedInstanceState == null) {
-            initFragments();
+            initFragments();    // Prvi put – kreira nove fragmente i dodaje ih u ekran
         } else {
-            restoreFragments();
+            restoreFragments(); // Posle rotacije – pronalazi već obnovljene fragmente po tagu
         }
 
-        setupBottomNav();
+        setupBottomNav(); // Podešava klikove na navigacionu traku na dnu
     }
 
-    // Creates fresh instances of both fragments and commits them to the same container
-    // in a single transaction (one back-stack entry). ChartFragment is hidden in the same
-    // transaction so the expense list is visible by default. Both fragments are given string
-    // tags ("list" and "chart") so they can be retrieved after a configuration change.
+    // Kreira nove instance oba fragmenta i dodaje ih u isti kontejner u jednoj transakciji.
+    // ChartFragment se odmah skriva da bi lista bila vidljiva po default-u.
+    // Oba fragmenta dobijaju string tagove ("list" i "chart") kako bi se mogli pronaći posle rotacije.
     private void initFragments() {
-        expenseListFragment = new ExpenseListFragment();
-        chartFragment = new ChartFragment();
+        expenseListFragment = new ExpenseListFragment(); // Kreira novi fragment liste troškova
+        chartFragment       = new ChartFragment();       // Kreira novi fragment grafikona
 
-        getSupportFragmentManager().beginTransaction()
-            .add(R.id.fragment_container, expenseListFragment, "list")
-            .add(R.id.fragment_container, chartFragment, "chart")
-            .hide(chartFragment)
-            .commit();
+        getSupportFragmentManager().beginTransaction()                  // Počinje transakciju fragmenata
+            .add(R.id.fragment_container, expenseListFragment, "list") // Dodaje fragment liste sa tagom "list"
+            .add(R.id.fragment_container, chartFragment, "chart")      // Dodaje fragment grafikona sa tagom "chart"
+            .hide(chartFragment)                                        // Skriva grafikon – lista je vidljiva po default-u
+            .commit();                                                  // Primenjuje transakciju
     }
 
-    // After a configuration change the system automatically recreates the fragments that
-    // were previously committed. This method retrieves those recreated instances by their
-    // tags so the fields point to the live objects again. Their show/hide state is also
-    // restored automatically by the system — no extra work needed.
+    // Posle rotacije ekrana Android sam obnavlja fragmente koji su bili prikazani.
+    // Ova metoda samo pronalazi te već obnovljene instance po tagovima i čuva reference u poljima,
+    // jer su stare reference postale nevažeće kada je aktivnost bila uništena i ponovo kreirana.
     private void restoreFragments() {
         expenseListFragment = (ExpenseListFragment)
-            getSupportFragmentManager().findFragmentByTag("list");
+            getSupportFragmentManager().findFragmentByTag("list");  // Pronalazi fragment liste po tagu "list"
         chartFragment = (ChartFragment)
-            getSupportFragmentManager().findFragmentByTag("chart");
+            getSupportFragmentManager().findFragmentByTag("chart"); // Pronalazi fragment grafikona po tagu "chart"
     }
 
-    // Attaches a selection listener to the bottom navigation bar. When the Expenses tab is
-    // selected, shows the list fragment and hides the chart, and vice versa for the Chart tab.
-    // Returns true to confirm the selection was handled; returns false for unrecognised items
-    // (which shouldn't happen but satisfies the listener contract).
+    // Pronalazi navigacionu traku i registruje listener za klikove na stavke.
+    // Klik na "Troškovi" prikazuje listu i skriva grafikon; klik na "Grafikon" radi obrnuto.
+    // Vraća true da potvrdi da je klik obrađen; false za nepoznate stavke (ne bi trebalo da se desi).
     private void setupBottomNav() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav); // Pronalazi navigacionu traku po ID-u
         bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_expenses) {
-                showFragment(expenseListFragment, chartFragment);
-                return true;
-            } else if (id == R.id.nav_chart) {
-                showFragment(chartFragment, expenseListFragment);
-                return true;
+            int id = item.getItemId();              // Uzima ID tapnute stavke
+            if (id == R.id.nav_expenses) {          // Ako je tapnuta stavka "Troškovi"
+                showFragment(expenseListFragment, chartFragment); // Prikazuje listu, skriva grafikon
+                return true;                        // Potvrđuje da je klik obrađen
+            } else if (id == R.id.nav_chart) {      // Ako je tapnuta stavka "Grafikon"
+                showFragment(chartFragment, expenseListFragment); // Prikazuje grafikon, skriva listu
+                return true;                        // Potvrđuje da je klik obrađen
             }
-            return false;
+            return false; // Nepoznata stavka – nije obrađena (ne bi trebalo da se desi)
         });
     }
 
-    // Performs a fragment transaction that shows one fragment and hides the other.
-    // show/hide is used instead of replace so each fragment's view state (scroll position,
-    // selected filter button) is preserved when the user switches tabs — replace would
-    // destroy and recreate the hidden fragment's view, losing that state.
+    // Prikazuje jedan fragment i skriva drugi u jednoj transakciji.
+    // Koristi se show/hide umesto replace jer replace uništava i ponovo kreira skriveni fragment,
+    // čime se gube stanje skrolovanja i izabrani filter – show/hide čuva to stanje.
     private void showFragment(Fragment show, Fragment hide) {
-        getSupportFragmentManager().beginTransaction()
-            .show(show)
-            .hide(hide)
-            .commit();
+        getSupportFragmentManager().beginTransaction() // Počinje transakciju fragmenata
+            .show(show) // Prikazuje izabrani fragment
+            .hide(hide) // Skriva drugi fragment (ali ne uništava ga – čuva stanje)
+            .commit();  // Primenjuje transakciju
     }
 }

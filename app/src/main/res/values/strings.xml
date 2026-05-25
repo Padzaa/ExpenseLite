@@ -1,36 +1,60 @@
 <resources>
+    <!-- Naziv aplikacije koji se vidi na početnom ekranu uređaja i u listi aplikacija -->
     <string name="app_name">ExpenseLite</string>
 
-    <!-- AddExpenseActivity -->
+    <!-- ==================== AddExpenseActivity ==================== -->
+    <!-- Naslov toolbara na ekranu za dodavanje troška -->
     <string name="title_add_expense">Add Expense</string>
+    <!-- Plutajuća oznaka iznad polja za unos naziva troška -->
     <string name="hint_name">Expense name</string>
+    <!-- Plutajuća oznaka iznad polja za unos iznosa -->
     <string name="hint_amount">Amount</string>
+    <!-- Plutajuća oznaka iznad padajuće liste kategorija -->
     <string name="hint_category">Category</string>
+    <!-- Tekst na dugmetu za snimanje troška -->
     <string name="btn_save">Save</string>
+    <!-- Poruka greške kada polje za naziv ostane prazno -->
     <string name="error_name">Enter a name</string>
+    <!-- Poruka greške kada polje za iznos ostane prazno -->
     <string name="error_amount_empty">Enter an amount</string>
+    <!-- Poruka greške kada uneseni iznos nije validan pozitivan broj -->
     <string name="error_amount_invalid">Enter a valid positive amount</string>
+    <!-- Poruka greške kada kategorija nije izabrana -->
     <string name="error_category">Select a category</string>
 
-    <!-- ExpenseListFragment -->
+    <!-- ==================== ExpenseListFragment ==================== -->
+    <!-- Početni tekst ukupnog iznosa pre nego što se troškovi učitaju -->
     <string name="total_default">Total: 0.00 €</string>
+    <!-- Format za prikazivanje ukupnog iznosa; %.2f se zamenjuje decimalnim brojem sa 2 mesta -->
     <string name="total_format">Total: %.2f €</string>
+    <!-- Tekst na dugmetu za filter "Dan" -->
     <string name="filter_day">Day</string>
+    <!-- Tekst na dugmetu za filter "Sedmica" -->
     <string name="filter_week">Week</string>
+    <!-- Tekst na dugmetu za filter "Mesec" -->
     <string name="filter_month">Month</string>
+    <!-- Poruka koja se prikazuje kada nema troškova za izabrani period -->
     <string name="empty_expenses">No expenses for this period</string>
+    <!-- Opis plutajućeg dugmeta "+" za čitače ekrana (pristupačnost) -->
     <string name="fab_add_desc">Add expense</string>
 
-    <!-- Delete dialog -->
+    <!-- ==================== Dijalog za brisanje ==================== -->
+    <!-- Naslov dijaloga koji se prikazuje kada korisnik dugim pritiskom odabere trošak -->
     <string name="delete_title">Delete Expense</string>
+    <!-- Tekst pitanja u dijalogu za potvrdu brisanja -->
     <string name="delete_message">Delete this expense?</string>
+    <!-- Tekst na dugmetu za potvrdu brisanja -->
     <string name="btn_confirm">Delete</string>
+    <!-- Tekst na dugmetu za odustajanje od brisanja -->
     <string name="btn_cancel">Cancel</string>
 
-    <!-- ChartFragment -->
+    <!-- ==================== ChartFragment ==================== -->
+    <!-- Poruka kada nema troškova za prikaz grafikona u izabranom periodu -->
     <string name="no_chart_data">No data for this period</string>
 
-    <!-- Bottom navigation -->
+    <!-- ==================== Navigaciona traka ==================== -->
+    <!-- Tekst ispod ikonice prvog taba u navigacionoj traci -->
     <string name="nav_expenses">Expenses</string>
+    <!-- Tekst ispod ikonice drugog taba u navigacionoj traci -->
     <string name="nav_chart">Chart</string>
 </resources>

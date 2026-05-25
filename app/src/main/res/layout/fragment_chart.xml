@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    fragment_chart.xml – izgled fragmenta koji prikazuje kružni grafikon troškova po kategorijama.
+    Organizacija (odozgo prema dole):
+      1. Dugmići za filter: Dan / Sedmica / Mesec
+      2. Poruka "Nema podataka" (text_no_data) – vidljiva samo kad nema troškova
+      3. PieChart – sam kružni grafikon koji zauzima sav preostali prostor
+      4. LinearLayout sa legendom – labele boja ispod grafikona (dinamički se popunjava iz Java koda)
+-->
+
+<!--
+    LinearLayout – vertikalni kontejner koji ređa sve elemente od vrha prema dnu.
+    padding="16dp" dodaje unutrašnji razmak od 16dp sa svih strana.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,7 +19,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+    <!--
+        xmlns:android            – standardni namespace za android: atribute
+        xmlns:app                – namespace za atribute biblioteka
+        layout_width/height="match_parent" – popunjava ceo ekran
+        orientation="vertical"   – elementi su poslagani odozgo prema dole
+        padding="16dp"           – unutrašnji razmak 16dp od svih ivica ekrana
+    -->
 
+    <!--
+        MaterialButtonToggleGroup – isti filter kao u listi troškova:
+        Dan / Sedmica / Mesec – tačno jedno dugme mora biti izabrano.
+        Java kod (ChartFragment) osvežava grafikon kada korisnik promeni filter.
+    -->
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toggle_filter"
         android:layout_width="wrap_content"
@@ -14,30 +39,58 @@
         android:layout_marginBottom="12dp"
         app:singleSelection="true"
         app:selectionRequired="true">
+        <!--
+            id="toggle_filter"           – Java: toggle.check(R.id.btn_day) i addOnButtonCheckedListener
+            layout_width="wrap_content"  – širina grupe je širina tri dugmića zajedno
+            layout_marginBottom="12dp"   – razmak 12dp ispod grupe
+            app:singleSelection="true"   – samo jedno dugme izabrano istovremeno
+            app:selectionRequired="true" – uvek mora biti jedno dugme izabrano
+        -->
 
+        <!-- Dugme "Dan" – grafikon za tekući dan -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_day"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/filter_day" />
+        <!--
+            id="btn_day"               – Java: if (buttonId == R.id.btn_day) → getStartOfDay()
+            style="OutlinedButton"     – dugme sa okvirom (Material 3 stil)
+            text="@string/filter_day"  – tekst: "Dan"
+        -->
 
+        <!-- Dugme "Sedmica" – grafikon od ponedeljka tekuće sedmice -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_week"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/filter_week" />
+        <!--
+            id="btn_week"               – Java: else if (buttonId == R.id.btn_week) → getStartOfWeek()
+            text="@string/filter_week"  – tekst: "Sedmica"
+        -->
 
+        <!-- Dugme "Mesec" – grafikon od prvog dana tekućeg meseca -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_month"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/filter_month" />
+        <!--
+            id="btn_month"               – Java: else → getStartOfMonth()
+            text="@string/filter_month"  – tekst: "Mesec"
+        -->
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <!--
+        Poruka "Nema podataka" – prikazuje se kad nema troškova za izabrani period.
+        visibility="gone" = nevidljiv i ne zauzima prostor.
+        Java kod u loadChart() dinamički menja vidljivost.
+    -->
     <TextView
         android:id="@+id/text_no_data"
         android:layout_width="match_parent"
@@ -46,13 +99,35 @@
         android:visibility="gone"
         android:gravity="center"
         android:paddingTop="40dp" />
+    <!--
+        id="text_no_data"              – Java: textNoData.setVisibility(View.VISIBLE/GONE)
+        text="@string/no_chart_data"   – poruka: "Nema podataka za ovaj period"
+        visibility="gone"              – inicijalno sakriven
+        gravity="center"               – tekst je horizontalno centriran
+        paddingTop="40dp"              – razmak 40dp odozgo za bolji vizuelni centar
+    -->
 
+    <!--
+        PieChart – widget iz MPAndroidChart biblioteke koji crta kružni grafikon.
+        layout_height="0dp" + layout_weight="1" = zauzima sav preostali prostor između filtera i legende.
+        Java kod u renderPieChart() predaje podatke i boje ovom widgetu.
+    -->
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pie_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+    <!--
+        id="pie_chart"          – Java: pieChart.setData(...) i pieChart.invalidate() za crtanje
+        layout_height="0dp"     – visina se ne fiksira – određuje je weight
+        layout_weight="1"       – zauzima sav preostali vertikalni prostor između dugmića i legende
+    -->
 
+    <!--
+        LinearLayout za legendu – vertikalni kontejner u koji Java kod dinamički dodaje
+        obojene labele (po jednu za svaku kategoriju troška).
+        Inicijalno prazan; Java kod u renderPieChart() poziva legendLayout.addView(...) za svaku kategoriju.
+    -->
     <LinearLayout
         android:id="@+id/layout_legend"
         android:layout_width="wrap_content"
@@ -60,5 +135,12 @@
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         android:layout_marginTop="8dp" />
+    <!--
+        id="layout_legend"               – Java: legendLayout.addView(createLegendItem(...)) za svaku kategoriju
+        layout_width/height="wrap_content" – kontejner je velik koliko su labele unutar njega
+        layout_gravity="center_horizontal" – horizontalno centriran na ekranu
+        orientation="vertical"           – labele se ređaju jedna ispod druge
+        layout_marginTop="8dp"           – razmak 8dp iznad legende odvaja je od grafikona
+    -->
 
 </LinearLayout>

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    bottom_nav_menu.xml – definiše stavke u navigacionoj traci na dnu ekrana (BottomNavigationView).
+    Svaka <item> postaje jedan tab sa ikonicom i tekstom.
+    MainActivity.java čita ove ID-jeve da bi znala koji tab je tapnut.
+-->
+
+<!--
+    <menu> – koren fajla; svi meniji u Androidu počinju ovim tagom.
+    xmlns:android – standardni namespace za android: atribute
+-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Prva stavka – tab "Troškovi".
+        Tapnuće prikazuje ExpenseListFragment (listu troškova).
+    -->
     <item
         android:id="@+id/nav_expenses"
         android:icon="@android:drawable/ic_menu_agenda"
         android:title="@string/nav_expenses" />
+    <!--
+        id="nav_expenses"                    – Java: if (id == R.id.nav_expenses) → prikaži listu
+        icon="@android:drawable/ic_menu_agenda" – ugrađena Android ikonica (lista/agenda)
+        title="@string/nav_expenses"         – tekst ispod ikonice: "Troškovi"
+    -->
+
+    <!--
+        Druga stavka – tab "Grafikon".
+        Tapnuće prikazuje ChartFragment (kružni grafikon).
+    -->
     <item
         android:id="@+id/nav_chart"
         android:icon="@android:drawable/ic_menu_report_image"
         android:title="@string/nav_chart" />
+    <!--
+        id="nav_chart"                            – Java: else if (id == R.id.nav_chart) → prikaži grafikon
+        icon="@android:drawable/ic_menu_report_image" – ugrađena Android ikonica (grafikon/izveštaj)
+        title="@string/nav_chart"                 – tekst ispod ikonice: "Grafikon"
+    -->
+
 </menu>

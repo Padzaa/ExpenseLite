@@ -1,36 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    activity_add_expense.xml – izgled ekrana za unos novog troška.
+    Organizovan vertikalno:
+      1. Toolbar na vrhu sa strelicom za povratak
+      2. Forma sa tri polja: naziv, iznos i kategorija
+      3. Dugme "Sačuvaj" ispod forme
+-->
+
+<!--
+    Spoljni LinearLayout – vertikalni kontejner koji drži toolbar i formu.
+    match_parent za obe dimenzije znači: popuni ceo ekran.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <!--
+        xmlns:android          – standardni namespace za android: atribute
+        layout_width/height="match_parent" – zauzima ceo ekran
+        orientation="vertical" – deca se ređaju odozgo prema dole
+    -->
 
+    <!--
+        MaterialToolbar – traka na vrhu sa strelicom za povratak.
+        Visina je standardna visina action bar-a iz teme.
+        Naslov se postavlja iz Java koda (setTitle) u AddExpenseActivity.java.
+    -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize" />
+    <!--
+        id="toolbar"                        – Java kod pronalazi toolbar ovde i registruje ga kao ActionBar
+        layout_width="match_parent"         – toolbar zauzima celu širinu
+        layout_height="?attr/actionBarSize" – standardna visina toolbar-a iz teme
+    -->
 
+    <!--
+        Unutrašnji LinearLayout – drži sva polja forme i dugme.
+        padding="16dp" dodaje razmak od 16dp sa svih strana unutar kontejnera.
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
+        <!--
+            layout_height="wrap_content" – visina je koliko sadržaj zahteva (ne popunjava ostatak ekrana)
+            padding="16dp"               – unutrašnji razmak 16dp sa svih strana (gore, dole, levo, desno)
+        -->
 
+        <!--
+            TextInputLayout za naziv – spoljni kontejner koji prikazuje hint i grešku ispod polja.
+            OutlinedBox stil prikazuje okvir oko polja (Material Design outlined stil).
+            hint se prikazuje kao plutajuća oznaka iznad polja kada korisnik počne da kuca.
+        -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_name"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_name">
+            <!--
+                id="layout_name"                    – Java kod postavlja grešku: layoutName.setError(...)
+                style="OutlinedBox"                 – Material Design okvir oko polja
+                layout_width="match_parent"         – polje zauzima celu širinu
+                hint="@string/hint_name"            – tekst koji se prikazuje kao oznaka polja ("Naziv troška")
+            -->
 
+            <!--
+                TextInputEditText – stvarno polje za unos teksta unutar TextInputLayout-a.
+                inputType="text" znači: standardna tastatura za tekst.
+            -->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
+            <!--
+                id="edit_name"         – Java kod čita uneseni tekst: editName.getText()
+                inputType="text"       – prikazuje standardnu tastaturu za unos teksta
+            -->
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--
+            TextInputLayout za iznos – isti princip kao iznad, ali za numerički unos.
+            layout_marginTop="12dp" dodaje razmak od 12dp iznad ovog polja.
+        -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_amount"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -38,15 +96,32 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="@string/hint_amount">
+            <!--
+                id="layout_amount"       – Java kod postavlja grešku ako iznos nije validan
+                layout_marginTop="12dp"  – razmak 12dp iznad ovog polja (odvaja od polja naziva)
+                hint="@string/hint_amount" – oznaka polja ("Iznos")
+            -->
 
+            <!--
+                TextInputEditText za iznos.
+                inputType="numberDecimal" prikazuje numeričku tastaturu sa tačkom za decimale.
+            -->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal" />
+            <!--
+                id="edit_amount"              – Java kod čita i parsira iznos: editAmount.getText()
+                inputType="numberDecimal"     – prikazuje numeričku tastaturu sa decimalnim separatorom
+            -->
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--
+            TextInputLayout za kategoriju – koristi ExposedDropdownMenu stil koji prikazuje
+            strelicu i otvara padajuću listu kada korisnik tapne. Java kod puni listu kategorijama.
+        -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_category"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -54,22 +129,48 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="@string/hint_category">
+            <!--
+                id="layout_category"           – Java kod postavlja grešku ako kategorija nije izabrana
+                style="ExposedDropdownMenu"    – Material Design stil padajuće liste (sa strelicom)
+                hint="@string/hint_category"   – oznaka polja ("Kategorija")
+            -->
 
+            <!--
+                MaterialAutoCompleteTextView – tekstualno polje koje pri tapnuću prikazuje padajuću listu.
+                focusable="false" i focusableInTouchMode="false" sprečavaju da korisnik direktno kuca
+                u polje – jedino može da bira iz liste.
+            -->
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/dropdown_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:focusableInTouchMode="false" />
+            <!--
+                id="dropdown_category"         – Java kod vezuje adapter i čita izabrano: dropdownCategory.getText()
+                focusable="false"              – onemogućava fokus tastaturom (samo tap otvara listu)
+                focusableInTouchMode="false"   – onemogućava fokus dodirom (korisnik ne može kucati slobodan tekst)
+            -->
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--
+            MaterialButton – dugme "Sačuvaj" koje korisnik tapne da sačuva trošak.
+            layout_marginTop="24dp" daje veći razmak iznad dugmeta za bolju preglednost.
+            Klik na dugme je vezan za onSaveClicked() u AddExpenseActivity.java.
+        -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/btn_save" />
+        <!--
+            id="btn_save"               – Java kod vezuje klik: findViewById(R.id.btn_save).setOnClickListener(...)
+            layout_width="match_parent" – dugme zauzima celu širinu ekrana
+            layout_marginTop="24dp"     – veći razmak (24dp) iznad dugmeta odvaja ga od forme
+            text="@string/btn_save"     – tekst na dugmetu ("Sačuvaj")
+        -->
 
     </LinearLayout>
 

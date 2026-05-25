@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    activity_main.xml – izgled glavnog ekrana aplikacije.
+    Organizovan je vertikalno (odozgo prema dole) u tri dela:
+      1. Toolbar (traka sa naslovom na vrhu)
+      2. FragmentContainerView (oblast u sredini koja prikazuje aktivni fragment)
+      3. BottomNavigationView (traka za navigaciju na dnu sa ikonama tabova)
+-->
+
+<!--
+    LinearLayout – raspored koji poređa svoju decu vertikalno (orientation="vertical").
+    match_parent za širinu i visinu znači: popuni ceo ekran.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,23 +18,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <!--
+        xmlns:android – standardni namespace za android: atribute
+        xmlns:app     – namespace za atribute specifične za biblioteke (npr. app:title)
+        id="main"     – jedinstven identifikator ovog elementa (koristi se iz Java koda)
+        layout_width/height="match_parent" – zauzima celu širinu i visinu roditelja (ceo ekran)
+        orientation="vertical" – deca se ređaju odozgo prema dole
+    -->
 
+    <!--
+        MaterialToolbar – traka na vrhu ekrana sa naslovom aplikacije.
+        Registruje se kao ActionBar u MainActivity.java.
+        actionBarSize je standardna Android visina toolbar-a (~56dp).
+    -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:title="@string/app_name" />
+    <!--
+        id="toolbar"                    – identifikator za pronalaženje iz Java koda (setSupportActionBar)
+        layout_width="match_parent"     – toolbar se proteže celom širinom ekrana
+        layout_height="?attr/actionBarSize" – visina je standardna visina action bar-a iz teme
+        app:title="@string/app_name"   – prikazuje naziv aplikacije ("ExpenseLite") u toolbaru
+    -->
 
+    <!--
+        FragmentContainerView – oblast u kojoj se prikazuju fragmenti (ExpenseListFragment ili ChartFragment).
+        layout_height="0dp" + layout_weight="1" znači: zauzmi sav preostali prostor između toolbar-a i navigacije.
+        Ovo je standardna tehnika za fleksibilnu raspodelu prostora u LinearLayout-u.
+    -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+    <!--
+        id="fragment_container"     – identifikator u koji MainActivity.java ubacuje fragmente
+        layout_height="0dp"         – visina se ne fiksira; određuje je weight mehanizam
+        layout_weight="1"           – zauzima sav preostali prostor (između toolbar-a i navigacione trake)
+    -->
 
+    <!--
+        BottomNavigationView – navigaciona traka na dnu ekrana sa dva taba: Troškovi i Grafikon.
+        Stavke (ikonice i naslovi tabova) definisane su u bottom_nav_menu.xml.
+        wrap_content za visinu znači da je toliko visoka koliko sadržaj zahteva.
+    -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_nav_menu" />
+    <!--
+        id="bottom_nav"                     – identifikator za registrovanje listener-a u MainActivity.java
+        layout_width="match_parent"         – traka se proteže celom širinom ekrana
+        layout_height="wrap_content"        – visina je koliko je potrebno za prikaz ikonica i teksta
+        app:menu="@menu/bottom_nav_menu"   – učitava stavke menija iz res/menu/bottom_nav_menu.xml
+    -->
 
 </LinearLayout>

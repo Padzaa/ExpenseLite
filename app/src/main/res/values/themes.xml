@@ -1,9 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!--
+        themes.xml – definiše vizuelni stil (temu) aplikacije: boje, fontove, oblike elemenata.
+        AndroidManifest.xml primenjuje ovu temu na celu aplikaciju: android:theme="@style/Theme.ExpenseLite"
+        xmlns:tools – namespace za alate koji ne utiče na ponašanje aplikacije
+    -->
+
+    <!--
+        Bazna tema aplikacije – nasleđuje Material 3 DayNight.NoActionBar temu.
+        DayNight = automatski prelazi na tamni/svetli mod prema sistemskim podešavanjima.
+        NoActionBar = nema podrazumevanog action bar-a (koristimo MaterialToolbar umesto njega).
+        Ovde bi se mogle prilagoditi primarne boje, fontovi i oblici dugmića za celu aplikaciju.
+    -->
     <style name="Base.Theme.ExpenseLite" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Prilagođavanja svetle teme idu ovde (za sada se koriste podrazumevane Material 3 boje) -->
+        <!-- Primer: <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <!--
+        Završna tema aplikacije – nasleđuje baznu temu gore.
+        Odvojena od bazne teme kako bi se mogle dodavati varijante (npr. noćni mod u values-night/themes.xml)
+        bez menjanja zajedničke osnove.
+    -->
     <style name="Theme.ExpenseLite" parent="Base.Theme.ExpenseLite" />
 </resources>

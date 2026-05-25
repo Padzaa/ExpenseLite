@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    item_expense.xml – izgled jednog reda u listi troškova (RecyclerView).
+    Svaki red prikazuje:
+      - Levo: naziv troška (bold, gore) i kategorija (manje, dole)
+      - Desno: iznos u evrima (vertikalno centriran)
+
+    Ovaj fajl opisuje JEDAN red. ExpenseAdapter.java ga multipluje za svaki trošak u listi.
+-->
+
+<!--
+    Spoljni LinearLayout – horizontalni kontejner koji deli red na levi deo (naziv+kategorija)
+    i desni deo (iznos). selectableItemBackground dodaje ripple efekat pri tapnuću.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -6,33 +19,76 @@
     android:orientation="horizontal"
     android:padding="12dp"
     android:background="?attr/selectableItemBackground">
+    <!--
+        layout_width="match_parent"         – red zauzima celu širinu liste
+        layout_height="wrap_content"        – visina reda je koliko sadržaj zahteva
+        orientation="horizontal"            – levi i desni deo su JEDAN PORED DRUGOG (ne jedan ispod drugog)
+        padding="12dp"                      – unutrašnji razmak 12dp sa svih strana
+        background="?attr/selectableItemBackground" – standardni Android ripple efekat (talasanje) pri tapnuću
+    -->
 
+    <!--
+        Unutrašnji LinearLayout za levi deo – sadrži naziv (gore) i kategoriju (dole).
+        layout_weight="1" + layout_width="0dp" znači: zauzmi sav prostor koji nije zauzeo iznos.
+    -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
+        <!--
+            layout_width="0dp"      – širina se ne fiksira; određuje je weight mehanizam
+            layout_weight="1"       – zauzima sav horizontalni prostor koji nije zauzeo iznos desno
+            orientation="vertical"  – naziv je IZNAD kategorije
+        -->
 
+        <!--
+            TextView za naziv troška – prikazuje se bold i veći (16sp).
+            Vrednost postavlja Java kod: holder.textName.setText(expense.getName())
+        -->
         <TextView
             android:id="@+id/text_expense_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold" />
+        <!--
+            id="text_expense_name"   – Java: holder.textName.setText(expense.getName())
+            textSize="16sp"          – veličina fonta 16sp – istaknuto kao naslov reda
+            textStyle="bold"         – podebljano za vizuelno isticanje naziva
+        -->
 
+        <!--
+            TextView za kategoriju – prikazuje se manji ispod naziva (13sp).
+            Vrednost postavlja Java kod: holder.textCategory.setText(expense.getCategory())
+        -->
         <TextView
             android:id="@+id/text_expense_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="13sp" />
+        <!--
+            id="text_expense_category" – Java: holder.textCategory.setText(expense.getCategory())
+            textSize="13sp"            – manji font od naziva (sekundarna informacija)
+        -->
 
     </LinearLayout>
 
+    <!--
+        TextView za iznos – prikazuje se desno, vertikalno centriran u redu.
+        Format je "42.50 €" – Java kod ga formatira: String.format("%.2f €", expense.getAmount())
+    -->
     <TextView
         android:id="@+id/text_expense_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:layout_gravity="center_vertical" />
+    <!--
+        id="text_expense_amount"    – Java: holder.textAmount.setText(String.format("%.2f €", ...))
+        layout_width="wrap_content" – širina je koliko je tekst iznosa dugačak
+        textSize="16sp"             – ista veličina kao naziv za vizuelnu ravnotežu
+        layout_gravity="center_vertical" – vertikalno centriran u redu (poravnat sa sredinom naziva i kategorije)
+    -->
 
 </LinearLayout>
